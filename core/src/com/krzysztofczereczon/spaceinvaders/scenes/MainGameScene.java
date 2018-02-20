@@ -1,13 +1,17 @@
 package com.krzysztofczereczon.spaceinvaders.scenes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.krzysztofczereczon.spaceinvaders.Game;
+import com.krzysztofczereczon.spaceinvaders.GameInfo;
 import com.krzysztofczereczon.spaceinvaders.objects.Player;
 
 public class MainGameScene implements com.badlogic.gdx.Screen {
@@ -15,11 +19,21 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
     Game game;
     Player player;
     Camera camera;
+    World world;
+
+    int mouseX, mouseY;
+
+    Box2DDebugRenderer debugRenderer;
 
     public MainGameScene(Game game) {
         this.game = game;
-        player = new Player();
-        camera = new OrthographicCamera(800, 600);
+        camera = new OrthographicCamera(GameInfo.WIDTH / GameInfo.PPM, GameInfo.HEIGHT / GameInfo.PPM);
+        world = new World(new Vector2(0, 0), true);
+        world.step(1/60f, 6, 6);
+        debugRenderer = new Box2DDebugRenderer();
+
+        //sprites objects
+        player = new Player(world);
 
         Gdx.input.setInputProcessor(new InputProcessor() {
             @Override
@@ -39,7 +53,9 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
 
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                player.move(new Vector3 (camera.unproject(new Vector3(screenX, screenY, 0))));
+                mouseX = screenX;
+                mouseY = screenY;
+                System.out.println(screenX);
                 return false;
             }
 
@@ -50,7 +66,8 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
 
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
-                player.move(new Vector3 (camera.unproject(new Vector3(screenX, screenY, 0))));
+                mouseX = screenX;
+                mouseY = screenY;
                 return false;
             }
 
@@ -79,6 +96,13 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
         game.getBatch().begin();
         player.update(game.getBatch());
         game.getBatch().end();
+
+        if(Gdx.input.isTouched(0)){
+            player.move(new Vector3 (camera.unproject(new Vector3(mouseX, mouseY, 0))));
+        }
+        world.step(Gdx.graphics.getDeltaTime(), 6, 2);
+
+        debugRenderer.render(world, camera.combined);
     }
 
     @Override
