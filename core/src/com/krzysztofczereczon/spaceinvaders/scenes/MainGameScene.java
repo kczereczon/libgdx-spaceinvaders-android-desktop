@@ -8,8 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.krzysztofczereczon.spaceinvaders.Game;
 import com.krzysztofczereczon.spaceinvaders.GameInfo;
 import com.krzysztofczereczon.spaceinvaders.objects.Player;
@@ -81,6 +80,29 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
                 return false;
             }
         });
+        world.setContactListener(new ContactListener() {
+            @Override
+            public void beginContact(Contact contact) {
+
+            }
+
+            @Override
+            public void endContact(Contact contact) {
+
+            }
+
+            @Override
+            public void preSolve(Contact contact, Manifold oldManifold) {
+                if(contact.getFixtureA().getBody().getUserData() == "bullet" && contact.getFixtureB().getUserData() == "player"){
+                    contact.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+
+            }
+        });
     }
 
     @Override
@@ -93,6 +115,7 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
         Gdx.gl.glClearColor(0,0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.getBatch().setProjectionMatrix(camera.combined);
+        world.step(Gdx.graphics.getDeltaTime(), 6, 6);
         game.getBatch().begin();
         player.update(game.getBatch());
         game.getBatch().end();
@@ -100,7 +123,7 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
         if(Gdx.input.isTouched(0)){
             player.move(new Vector3 (camera.unproject(new Vector3(mouseX, mouseY, 0))));
         }
-        world.step(Gdx.graphics.getDeltaTime(), 6, 2);
+
 
         debugRenderer.render(world, camera.combined);
     }
