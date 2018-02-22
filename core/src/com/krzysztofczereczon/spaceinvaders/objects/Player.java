@@ -33,9 +33,15 @@ public class Player extends Sprite {
         float angle = (float)Math.atan2(screenX, screenY);
 
         Vector2 impulse = new Vector2(2 * -(float)Math.sin(body.getAngle() * Math.PI/180) / GameInfo.PPM, 2 * (float)Math.cos(body.getAngle() * Math.PI/180) / GameInfo.PPM);
+        Vector2 impulseFaster = new Vector2(12 * -(float)Math.sin(body.getAngle() * Math.PI/180) / GameInfo.PPM, 12 * (float)Math.cos(body.getAngle() * Math.PI/180) / GameInfo.PPM);
 
         body.setTransform(body.getPosition().x, body.getPosition().y, (float)(-angle * 180/Math.PI));
-        body.applyLinearImpulse( impulse, body.getWorldCenter(), true);
+
+        if(body.getLinearVelocity().x / Math.abs(body.getLinearVelocity().x) != impulse.x / Math.abs(impulse.x) || body.getLinearVelocity().y / Math.abs(body.getLinearVelocity().y) != impulse.y / Math.abs(impulse.y)) {
+            body.applyLinearImpulse(impulseFaster, body.getWorldCenter(), true);
+        }else {
+            body.applyLinearImpulse(impulse, body.getWorldCenter(), true);
+        }
     }
 
 
@@ -52,6 +58,7 @@ public class Player extends Sprite {
         shape.setRadius(getHeight() / 2 / GameInfo.PPM);
 
         FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.restitution = 1f;
         fixtureDef.shape = shape;
 
         body.createFixture(fixtureDef).setUserData("player");

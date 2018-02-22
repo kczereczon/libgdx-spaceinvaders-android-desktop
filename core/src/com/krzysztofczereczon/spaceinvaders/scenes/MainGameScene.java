@@ -92,10 +92,23 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
                 if(contact.getFixtureA().getBody().getUserData() == "bullet" && contact.getFixtureB().getBody().getUserData() == "big"){
                     gameObjectManager.bodies.add(contact.getFixtureB().getBody());
                     gameObjectManager.asteroidsBig.remove(contact.getFixtureB().getUserData());
+                    gameObjectManager.bodies.add(contact.getFixtureA().getBody());
+                    gameObjectManager.bullets.remove(contact.getFixtureA().getUserData());
+                }
+
+                if(contact.getFixtureA().getBody().getUserData() == "bullet" && contact.getFixtureB().getBody().getUserData() == "medium"){
+
+                    gameObjectManager.bodies.add(contact.getFixtureB().getBody());
+                    gameObjectManager.asteroidsMedium.remove(contact.getFixtureB().getUserData());
 
                     gameObjectManager.bodies.add(contact.getFixtureA().getBody());
                     gameObjectManager.bullets.remove(contact.getFixtureA().getUserData());
 
+                }
+
+                if(contact.getFixtureB().getBody().getUserData() == "bullet" && (contact.getFixtureA().getBody().getUserData() == "top" || contact.getFixtureA().getBody().getUserData() == "bottom" || contact.getFixtureA().getBody().getUserData() == "left" || contact.getFixtureA().getBody().getUserData() == "right")){
+                    gameObjectManager.bodies.add(contact.getFixtureB().getBody());
+                    gameObjectManager.bullets.remove(contact.getFixtureB().getUserData());
                 }
             }
 
@@ -107,8 +120,23 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
             public void preSolve(Contact contact, Manifold oldManifold) {
                 if(contact.getFixtureA().getBody().getUserData() == "bullet" && contact.getFixtureB().getUserData() == "player"){
                     contact.setEnabled(false);
+                }else{
+                    contact.setEnabled(true);
                 }
 
+                if(contact.getFixtureB().getBody().getUserData() == "big" && contact.getFixtureA().getBody().getUserData() == "top" && contact.getFixtureB().getBody().getLinearVelocity().y < 0){
+                    contact.setEnabled(false);
+                }
+
+                if(contact.getFixtureB().getBody().getUserData() == "big" && contact.getFixtureA().getBody().getUserData() == "bottom" && contact.getFixtureB().getBody().getLinearVelocity().y > 0){
+                    contact.setEnabled(false);
+                }
+                if(contact.getFixtureB().getBody().getUserData() == "big" && contact.getFixtureA().getBody().getUserData() == "right" && contact.getFixtureB().getBody().getLinearVelocity().x > 0){
+                    contact.setEnabled(false);
+                }
+                if(contact.getFixtureB().getBody().getUserData() == "big" && contact.getFixtureA().getBody().getUserData() == "left" && contact.getFixtureB().getBody().getLinearVelocity().x < 0){
+                    contact.setEnabled(false);
+                }
             }
 
             @Override

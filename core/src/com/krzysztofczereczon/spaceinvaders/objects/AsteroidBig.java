@@ -20,7 +20,7 @@ public class AsteroidBig extends Sprite {
         float velocityX =  playerPos.getPosition().x - respawnPosition.x;
         float velocityY = -1 * playerPos.getPosition().y - respawnPosition.y;
 
-        body.setLinearVelocity(new Vector2(velocityX / Math.abs(velocityX), velocityY / Math.abs(velocityY)));
+        body.applyLinearImpulse(new Vector2(2*velocityX / Math.abs(velocityX), 2*velocityY / Math.abs(velocityY)), body.getWorldCenter(), true);
 
     }
 
@@ -37,6 +37,8 @@ public class AsteroidBig extends Sprite {
         shape.setRadius(getHeight() / 2 / GameInfo.PPM);
 
         FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.restitution = 1;
+        fixtureDef.density = 0;
         fixtureDef.shape = shape;
 
         body.createFixture(fixtureDef).setUserData(this);

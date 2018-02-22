@@ -1,21 +1,20 @@
 package com.krzysztofczereczon.spaceinvaders;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.JointEdge;
+import com.badlogic.gdx.physics.box2d.Transform;
 import com.badlogic.gdx.physics.box2d.World;
 import com.krzysztofczereczon.spaceinvaders.objects.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameObjectManager {
 
     private World world;
+    private GameBorder gameBorder;
 
     private float asteroidDelay;
     private int currentLevel = 0;
@@ -26,10 +25,6 @@ public class GameObjectManager {
     public List<AsteroidBig> asteroidsBig;
     public List<AsteroidSmall> asteroidsSmall;
     public List<AsteroidMedium> asteroidsMedium;
-
-    public List<AsteroidBig> bigsToDestory;
-    public List<Object> medsToDestory;
-    public List<Object> smallsToDestory;
 
     public com.badlogic.gdx.utils.Array<Body> bodies;
 
@@ -51,8 +46,7 @@ public class GameObjectManager {
         asteroidsMedium = new ArrayList<AsteroidMedium>();
         asteroidsBig = new ArrayList<AsteroidBig>();
         bodies = new com.badlogic.gdx.utils.Array<Body>();
-
-        bigsToDestory = new ArrayList<AsteroidBig>();
+        gameBorder = new GameBorder(world);
 
         asteroidsBig.add(new AsteroidBig(up,player.body.getTransform(),world));
         bullets = new ArrayList<Bullet>();
@@ -85,11 +79,19 @@ public class GameObjectManager {
         }
     }
 
+    public void addMediumAsteroid(Transform biggerAsteroidTransform, int dir){
+        asteroidsMedium.add(new AsteroidMedium(dir, new Vector2(biggerAsteroidTransform.getPosition().x, biggerAsteroidTransform.getPosition().y + 64/GameInfo.PPM), player.body.getTransform(), world));
+    }
+
     private void destroy(){
         if(bodies.size > 0) {
             for (Body body : bodies
                     ) {
                 if (!world.isLocked()) {
+                    if(body.getUserData() == "big"){
+                        //addMediumAsteroid(body.getTransform(), 1);
+                        //addMediumAsteroid(body.getTransform(), -1);
+                    }
                     world.destroyBody(body);
                     bodies.removeValue(body,false);
                 }
