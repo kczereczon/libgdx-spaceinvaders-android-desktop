@@ -4,16 +4,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.krzysztofczereczon.spaceinvaders.GameInfo;
 
 public class Bullet extends Sprite {
 
-    Body body;
-    World world;
+    private Body body;
+    private World world;
 
-    public Bullet(World world, Vector2 position, float angle){
+    Bullet(World world, Vector2 position, float angle){
         super(new Texture("bullet.png"));
         this.world = world;
         createBody();
@@ -24,7 +23,7 @@ public class Bullet extends Sprite {
 
     }
 
-    public void createBody(){
+    private void createBody(){
         BodyDef bodyDef = new BodyDef();
 
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -39,7 +38,7 @@ public class Bullet extends Sprite {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
 
-        body.createFixture(fixtureDef).setUserData("bullet");
+        body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
     }
 

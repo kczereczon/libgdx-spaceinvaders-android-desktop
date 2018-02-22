@@ -7,27 +7,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
-import com.krzysztofczereczon.spaceinvaders.Game;
 import com.krzysztofczereczon.spaceinvaders.GameInfo;
 
-import java.awt.geom.RectangularShape;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends Sprite {
 
-    World world;
-    Body body;
+    private World world;
+    public Body body;
 
-    List<Bullet> bullets;
-    Vector3 touch;
 
-    float reload = 0;
+    private float reload = 0;
 
     public Player(World world){
         super(new Texture("player.png"));
         this.world = world;
-        bullets = new ArrayList<Bullet>();
 
         createBody();
     }
@@ -45,7 +39,7 @@ public class Player extends Sprite {
     }
 
 
-    public void createBody(){
+    private void createBody(){
         BodyDef bodyDef = new BodyDef();
 
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -65,7 +59,7 @@ public class Player extends Sprite {
     }
 
 
-    public void update(SpriteBatch batch){
+    public void update(SpriteBatch batch, List<Bullet> bullets){
         batch.draw(this,body.getPosition().x  - getWidth()/2 / GameInfo.PPM, body.getPosition().y  - getHeight() / 2 / GameInfo.PPM, getWidth() / 2 / GameInfo.PPM, getHeight()/2 / GameInfo.PPM, getWidth() / GameInfo.PPM, getHeight() / GameInfo.PPM,1,1,body.getAngle());
 
         if(reload >= 1){
