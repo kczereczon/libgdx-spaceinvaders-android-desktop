@@ -61,12 +61,11 @@ public class Player extends Sprite {
     public void update(SpriteBatch batch, List<Bullet> bullets){
         batch.draw(this,body.getPosition().x  - getWidth()/2 / GameInfo.PPM, body.getPosition().y  - getHeight() / 2 / GameInfo.PPM, getWidth() / 2 / GameInfo.PPM, getHeight()/2 / GameInfo.PPM, getWidth() / GameInfo.PPM, getHeight() / GameInfo.PPM,1,1,body.getAngle());
 
-        if(reload >= 1){
+        if(reload >= 0.1f){
             bullets.add(new Bullet(world, body.getPosition(), body.getAngle()));
             reload = 0;
         }else{
             reload += Gdx.graphics.getDeltaTime();
-
         }
 
     }

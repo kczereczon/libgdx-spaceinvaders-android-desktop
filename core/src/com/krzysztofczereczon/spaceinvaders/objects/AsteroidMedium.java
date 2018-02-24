@@ -45,6 +45,7 @@ public class AsteroidMedium extends Sprite{
     }
 
     public void update(SpriteBatch batch) {
+        if(body != null)
         batch.draw(this, body.getPosition().x - getWidth() / 2 / GameInfo.PPM, body.getPosition().y - getHeight() / 2 / GameInfo.PPM, getWidth() / 2 / GameInfo.PPM, getHeight() / 2 / GameInfo.PPM, getWidth() / GameInfo.PPM, getHeight() / GameInfo.PPM, 1, 1, body.getAngle());
     }
 }

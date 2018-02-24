@@ -90,23 +90,23 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
             @Override
             public void beginContact(Contact contact) {
                 if(contact.getFixtureA().getBody().getUserData() == "bullet" && (contact.getFixtureB().getBody().getUserData() == "big" || contact.getFixtureB().getBody().getUserData() == "medium")){
-                    gameObjectManager.bodies.add(contact.getFixtureB().getBody());
                     if(contact.getFixtureB().getBody().getUserData() == "big") {
                         gameObjectManager.asteroidsBig.remove(contact.getFixtureB().getUserData());
                     }
                     else if(contact.getFixtureB().getBody().getUserData() == "medium"){
                         gameObjectManager.asteroidsMedium.remove(contact.getFixtureB().getUserData());
                     }
+                    gameObjectManager.bodies.add(contact.getFixtureB().getBody());
                 }
 
                 if(contact.getFixtureA().getBody().getUserData() == "bullet" && (contact.getFixtureB().getBody().getUserData() == "big" || contact.getFixtureB().getBody().getUserData() == "medium")) {
-                    gameObjectManager.bodies.add(contact.getFixtureA().getBody());
                     gameObjectManager.bullets.remove(contact.getFixtureA().getUserData());
+                    gameObjectManager.bodies.add(contact.getFixtureA().getBody());
                 }
 
                 if(contact.getFixtureB().getBody().getUserData() == "bullet" && (contact.getFixtureA().getBody().getUserData() == "top" || contact.getFixtureA().getBody().getUserData() == "bottom" || contact.getFixtureA().getBody().getUserData() == "left" || contact.getFixtureA().getBody().getUserData() == "right")){
-                    gameObjectManager.bodies.add(contact.getFixtureB().getBody());
                     gameObjectManager.bullets.remove(contact.getFixtureB().getUserData());
+                    gameObjectManager.bodies.add(contact.getFixtureB().getBody());
                 }
             }
 
@@ -160,8 +160,10 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         world.step(Gdx.graphics.getDeltaTime(), 6, 6);
-        gameManager.update();
 
+        gameObjectManager.destroyBodies();
+
+        gameManager.update();
         game.getBatch().setProjectionMatrix(camera.combined);
         game.getBatch().begin();
         gameObjectManager.update(game.getBatch());
@@ -172,7 +174,7 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
         }
 
 
-        debugRenderer.render(world, camera.combined);
+        //debugRenderer.render(world, camera.combined);
     }
 
     @Override

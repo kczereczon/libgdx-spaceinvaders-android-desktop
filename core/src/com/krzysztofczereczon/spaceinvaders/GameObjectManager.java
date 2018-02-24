@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.physics.box2d.Transform;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.krzysztofczereczon.spaceinvaders.objects.*;
 
 import java.util.ArrayList;
@@ -60,7 +62,6 @@ public class GameObjectManager {
     public void update(SpriteBatch batch){
         player.update(batch, bullets);
         draw(batch);
-        destroy();
 
         //incresing delay
         asteroidDelay += Gdx.graphics.getDeltaTime();
@@ -83,15 +84,23 @@ public class GameObjectManager {
         asteroidsMedium.add(new AsteroidMedium(dir, new Vector2(biggerAsteroidTransform.getPosition().x, biggerAsteroidTransform.getPosition().y + 64/GameInfo.PPM), player.body.getTransform(), world));
     }
 
-    private void destroy(){
+    public void destroyBodies(){
         if(bodies.size > 0) {
             for (Body body : bodies
                     ) {
                 if (!world.isLocked()) {
                     if(body.getUserData() == "big"){
-                        //addMediumAsteroid(body.getTransform(), 1);
-                        //addMediumAsteroid(body.getTransform(), -1);
+                        addMediumAsteroid(body.getTransform(), 1);
+                        addMediumAsteroid(body.getTransform(), -1);
                     }
+
+                    Array<JointEdge> joints = body.getJointList();
+                    for (JointEdge joint: joints
+                         ) {
+                        world.destroyJoint(joint.joint);
+                    }
+
+
                     world.destroyBody(body);
                     bodies.removeValue(body,false);
                 }
