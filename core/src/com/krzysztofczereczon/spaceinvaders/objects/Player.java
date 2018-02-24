@@ -29,7 +29,11 @@ public class Player extends Sprite {
     public void move(Vector3 vector){
         float angle = (float)Math.atan2(vector.x, vector.y);
         body.setTransform(body.getPosition().x, body.getPosition().y, (float)(-angle * 180/Math.PI));
-        body.applyForce(new Vector2(-(body.getPosition().x - vector.x), -(body.getPosition().y - vector.y)), body.getPosition(), true);
+
+        float joyX = -(body.getPosition().x - vector.x);
+        float joyY = -(body.getPosition().y - vector.y);
+
+        body.applyForce(new Vector2(((body.getLinearVelocity().x >= 0 && joyX <= 0) || (body.getLinearVelocity().x <= 0 && joyX >= 0)) ? 5 * joyX : joyX, ((body.getLinearVelocity().y >= 0 && joyY <= 0) || (body.getLinearVelocity().y <= 0 && joyY >= 0)) ? 5 * joyY : joyY), body.getPosition(), true);
     }
 
 
