@@ -24,7 +24,7 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
     private GameObjectManager gameObjectManager;
     private GameManager gameManager;
 
-    private int mouseX, mouseY;
+    private float startMouseX, startMouseY, mouseX, mouseY;
 
     private Box2DDebugRenderer debugRenderer;
 
@@ -89,21 +89,19 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
         world.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
-                if(contact.getFixtureA().getBody().getUserData() == "bullet" && contact.getFixtureB().getBody().getUserData() == "big"){
+                if(contact.getFixtureA().getBody().getUserData() == "bullet" && (contact.getFixtureB().getBody().getUserData() == "big" || contact.getFixtureB().getBody().getUserData() == "medium")){
                     gameObjectManager.bodies.add(contact.getFixtureB().getBody());
-                    gameObjectManager.asteroidsBig.remove(contact.getFixtureB().getUserData());
-                    gameObjectManager.bodies.add(contact.getFixtureA().getBody());
-                    gameObjectManager.bullets.remove(contact.getFixtureA().getUserData());
+                    if(contact.getFixtureB().getBody().getUserData() == "big") {
+                        gameObjectManager.asteroidsBig.remove(contact.getFixtureB().getUserData());
+                    }
+                    else if(contact.getFixtureB().getBody().getUserData() == "medium"){
+                        gameObjectManager.asteroidsMedium.remove(contact.getFixtureB().getUserData());
+                    }
                 }
 
-                if(contact.getFixtureA().getBody().getUserData() == "bullet" && contact.getFixtureB().getBody().getUserData() == "medium"){
-
-                    gameObjectManager.bodies.add(contact.getFixtureB().getBody());
-                    gameObjectManager.asteroidsMedium.remove(contact.getFixtureB().getUserData());
-
+                if(contact.getFixtureA().getBody().getUserData() == "bullet" && (contact.getFixtureB().getBody().getUserData() == "big" || contact.getFixtureB().getBody().getUserData() == "medium")) {
                     gameObjectManager.bodies.add(contact.getFixtureA().getBody());
                     gameObjectManager.bullets.remove(contact.getFixtureA().getUserData());
-
                 }
 
                 if(contact.getFixtureB().getBody().getUserData() == "bullet" && (contact.getFixtureA().getBody().getUserData() == "top" || contact.getFixtureA().getBody().getUserData() == "bottom" || contact.getFixtureA().getBody().getUserData() == "left" || contact.getFixtureA().getBody().getUserData() == "right")){
@@ -134,7 +132,12 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
                 if(contact.getFixtureB().getBody().getUserData() == "big" && contact.getFixtureA().getBody().getUserData() == "right" && contact.getFixtureB().getBody().getLinearVelocity().x > 0){
                     contact.setEnabled(false);
                 }
+
                 if(contact.getFixtureB().getBody().getUserData() == "big" && contact.getFixtureA().getBody().getUserData() == "left" && contact.getFixtureB().getBody().getLinearVelocity().x < 0){
+                    contact.setEnabled(false);
+                }
+
+                if((contact.getFixtureB().getBody().getUserData() == "big" || contact.getFixtureB().getBody().getUserData() == "medium") && (contact.getFixtureA().getBody().getUserData() == "big" || contact.getFixtureA().getBody().getUserData() == "medium")){
                     contact.setEnabled(false);
                 }
             }
@@ -165,7 +168,7 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
         game.getBatch().end();
 
         if(Gdx.input.isTouched(0)){
-            gameObjectManager.player.move(new Vector3 (camera.unproject(new Vector3(mouseX, mouseY, 0))));
+            gameObjectManager.player.move(camera.unproject(new Vector3(mouseX,mouseY,0)));
         }
 
 
