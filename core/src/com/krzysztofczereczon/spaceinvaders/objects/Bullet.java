@@ -9,7 +9,7 @@ import com.krzysztofczereczon.spaceinvaders.GameInfo;
 
 public class Bullet extends Sprite {
 
-    private Body body;
+    public Body body;
     private World world;
 
     Bullet(World world, Vector2 position, float angle){
@@ -30,7 +30,7 @@ public class Bullet extends Sprite {
         bodyDef.position.set(getX(), getY());
 
         body = world.createBody(bodyDef);
-        body.setUserData("bullet");
+        body.setUserData(new BodyDataObject(this, "bullet", false));
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(getWidth()/2/ GameInfo.PPM, getHeight() / 2 / GameInfo.PPM);
@@ -38,7 +38,7 @@ public class Bullet extends Sprite {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
 
-        body.createFixture(fixtureDef).setUserData(this);
+        body.createFixture(fixtureDef).setUserData("bullet");
         shape.dispose();
     }
 

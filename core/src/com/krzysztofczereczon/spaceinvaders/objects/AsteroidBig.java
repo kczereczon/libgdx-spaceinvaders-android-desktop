@@ -15,13 +15,13 @@ public class AsteroidBig extends Sprite {
         super(new Texture("asteroidbig.png"));
         createBody(world);
 
-        body.setTransform(respawnPosition.x, respawnPosition.y,0);
+        body.setTransform(respawnPosition.x, respawnPosition.y,30);
 
         float velocityX =  playerPos.getPosition().x - respawnPosition.x;
         float velocityY = -1 * playerPos.getPosition().y - respawnPosition.y;
 
         body.applyLinearImpulse(new Vector2(2*velocityX / Math.abs(velocityX), 2*velocityY / Math.abs(velocityY)), body.getWorldCenter(), true);
-
+        body.setAngularVelocity(20);
     }
 
     private void createBody(World world) {
@@ -31,19 +31,20 @@ public class AsteroidBig extends Sprite {
         bodyDef.position.set(getX() / GameInfo.PPM, getY() / GameInfo.PPM);
 
         body = world.createBody(bodyDef);
-        body.setUserData("big");
+        body.setUserData(new BodyDataObject(this, "big", false));
 
         CircleShape shape = new CircleShape();
         shape.setRadius(getHeight() / 2 / GameInfo.PPM);
 
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.restitution = 1;
-        fixtureDef.density = 0;
+        fixtureDef.restitution = 1f;
         fixtureDef.shape = shape;
 
-        body.createFixture(fixtureDef).setUserData(this);
+        body.createFixture(fixtureDef).setUserData("big");
         shape.dispose();
     }
+
+
 
     public void update(SpriteBatch batch) {
         if(body != null)

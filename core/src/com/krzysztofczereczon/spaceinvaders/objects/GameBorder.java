@@ -20,19 +20,19 @@ public class GameBorder {
 
         bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set(0, (float)GameInfo.HEIGHT / 2 / GameInfo.PPM);
-        System.out.println(GameInfo.HEIGHT / 2 / GameInfo.PPM);
+        System.out.println(GameInfo.HEIGHT + 64 / 2 / GameInfo.PPM );
 
         body = world.createBody(bodyDef);
-        body.setUserData("top");
+        body.setUserData(new BodyDataObject(this,"border",  false));
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(GameInfo.WIDTH/GameInfo.PPM, 1/GameInfo.PPM);
+        shape.setAsBox(GameInfo.WIDTH/GameInfo.PPM, 32f/GameInfo.PPM);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
 
 
-        body.createFixture(fixtureDef);
+        body.createFixture(fixtureDef).setUserData("top");
         shape.dispose();
     }
 
@@ -43,17 +43,17 @@ public class GameBorder {
         bodyDef.position.set(0, -(float)GameInfo.HEIGHT / 2 / GameInfo.PPM );
 
         body = world.createBody(bodyDef);
-        body.setUserData("bottom");
+        body.setUserData(new BodyDataObject(this,"border",  false));
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(GameInfo.WIDTH/GameInfo.PPM, 1/GameInfo.PPM);
+        shape.setAsBox(GameInfo.WIDTH/GameInfo.PPM, 32f/GameInfo.PPM);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.restitution = 1;
         fixtureDef.shape = shape;
 
 
-        body.createFixture(fixtureDef);
+        body.createFixture(fixtureDef).setUserData("bottom");
         shape.dispose();
     }
 
@@ -61,20 +61,20 @@ public class GameBorder {
         BodyDef bodyDef = new BodyDef();
 
         bodyDef.type = BodyDef.BodyType.StaticBody;
-        bodyDef.position.set((float)GameInfo.WIDTH / 2 / GameInfo.PPM, 0);
+        bodyDef.position.set((float)GameInfo.WIDTH / 2 / GameInfo.PPM, 32f/GameInfo.PPM);
 
         body = world.createBody(bodyDef);
-        body.setUserData("left");
+        body.setUserData(new BodyDataObject(this, "border", false));
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(1/GameInfo.PPM, GameInfo.HEIGHT/GameInfo.PPM);
+        shape.setAsBox(32f/GameInfo.PPM, GameInfo.HEIGHT/GameInfo.PPM);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.restitution = 1;
         fixtureDef.shape = shape;
 
 
-        body.createFixture(fixtureDef);
+        body.createFixture(fixtureDef).setUserData("left");
         shape.dispose();
     }
 
@@ -85,7 +85,7 @@ public class GameBorder {
         bodyDef.position.set(-(float)GameInfo.WIDTH / 2 / GameInfo.PPM, 0);
 
         body = world.createBody(bodyDef);
-        body.setUserData("right");
+        body.setUserData(new BodyDataObject(this, "border",false));
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(1/GameInfo.PPM, GameInfo.HEIGHT/GameInfo.PPM);
@@ -95,7 +95,7 @@ public class GameBorder {
         fixtureDef.shape = shape;
 
 
-        body.createFixture(fixtureDef);
+        body.createFixture(fixtureDef).setUserData("right");
         shape.dispose();
     }
 }

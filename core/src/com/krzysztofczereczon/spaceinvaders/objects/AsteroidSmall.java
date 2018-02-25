@@ -15,12 +15,12 @@ public class AsteroidSmall extends Sprite{
         super(new Texture("asteroidsmall.png"));
         createBody(world);
         body.setTransform(respawnPosition.x, respawnPosition.y,0);
-        float random = (float)(Math.random()*2) -1;
 
-        float velocityX = ((random / Math.abs(random)) * (playerPos.getPosition().x - respawnPosition.x));
-        float velocityY =  -1 * playerPos.getPosition().y - respawnPosition.y;
+        float velocityX = playerPos.getPosition().x - respawnPosition.x;
+        float velocityY =  playerPos.getPosition().y - respawnPosition.y;
 
-        body.setLinearVelocity(new Vector2(velocityX / Math.abs(velocityX), velocityY / Math.abs(velocityY)));
+        body.setLinearVelocity(new Vector2(1.5f * velocityX / Math.abs(velocityX), 1.5f * velocityY / Math.abs(velocityY)));
+        body.setAngularVelocity(60);
     }
 
     private void createBody(World world) {
@@ -30,12 +30,13 @@ public class AsteroidSmall extends Sprite{
         bodyDef.position.set(getX() / GameInfo.PPM, getY() / GameInfo.PPM);
 
         body = world.createBody(bodyDef);
-        body.setUserData("small");
+        body.setUserData(new BodyDataObject(this, "small", false));
 
         CircleShape shape = new CircleShape();
         shape.setRadius(getHeight() / 2 / GameInfo.PPM);
 
         FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.restitution = 1f;
         fixtureDef.shape = shape;
 
         body.createFixture(fixtureDef).setUserData("small");

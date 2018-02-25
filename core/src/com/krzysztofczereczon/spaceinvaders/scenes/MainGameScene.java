@@ -14,6 +14,7 @@ import com.krzysztofczereczon.spaceinvaders.GameManager;
 import com.krzysztofczereczon.spaceinvaders.GameObjectManager;
 import com.krzysztofczereczon.spaceinvaders.objects.AsteroidBig;
 import com.krzysztofczereczon.spaceinvaders.objects.AsteroidMedium;
+import com.krzysztofczereczon.spaceinvaders.objects.BodyDataObject;
 
 public class MainGameScene implements com.badlogic.gdx.Screen {
 
@@ -89,24 +90,19 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
         world.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
-                if(contact.getFixtureA().getBody().getUserData() == "bullet" && (contact.getFixtureB().getBody().getUserData() == "big" || contact.getFixtureB().getBody().getUserData() == "medium")){
-                    if(contact.getFixtureB().getBody().getUserData() == "big") {
-                        gameObjectManager.asteroidsBig.remove(contact.getFixtureB().getUserData());
-                    }
-                    else if(contact.getFixtureB().getBody().getUserData() == "medium"){
-                        gameObjectManager.asteroidsMedium.remove(contact.getFixtureB().getUserData());
-                    }
-                    gameObjectManager.bodies.add(contact.getFixtureB().getBody());
+                if(contact.getFixtureA().getUserData() == "bullet" && (contact.getFixtureB().getUserData() == "big" || contact.getFixtureB().getUserData() == "medium" || contact.getFixtureB().getUserData() == "small")){
+                    BodyDataObject dataObject = (BodyDataObject) contact.getFixtureB().getBody().getUserData();
+                    contact.getFixtureB().getBody().setUserData(new BodyDataObject(dataObject.object, dataObject.type,true));
                 }
 
-                if(contact.getFixtureA().getBody().getUserData() == "bullet" && (contact.getFixtureB().getBody().getUserData() == "big" || contact.getFixtureB().getBody().getUserData() == "medium")) {
-                    gameObjectManager.bullets.remove(contact.getFixtureA().getUserData());
-                    gameObjectManager.bodies.add(contact.getFixtureA().getBody());
+                if(contact.getFixtureA().getUserData() == "bullet" && (contact.getFixtureB().getUserData() == "big" || contact.getFixtureB().getUserData() == "medium" || contact.getFixtureB().getUserData() == "small")) {
+                    BodyDataObject dataObject = (BodyDataObject) contact.getFixtureA().getBody().getUserData();
+                    contact.getFixtureA().getBody().setUserData(new BodyDataObject(dataObject.object, dataObject.type, true));
                 }
 
-                if(contact.getFixtureB().getBody().getUserData() == "bullet" && (contact.getFixtureA().getBody().getUserData() == "top" || contact.getFixtureA().getBody().getUserData() == "bottom" || contact.getFixtureA().getBody().getUserData() == "left" || contact.getFixtureA().getBody().getUserData() == "right")){
-                    gameObjectManager.bullets.remove(contact.getFixtureB().getUserData());
-                    gameObjectManager.bodies.add(contact.getFixtureB().getBody());
+                if(contact.getFixtureB().getUserData() == "bullet" && (contact.getFixtureA().getUserData() == "top" || contact.getFixtureA().getUserData() == "bottom" || contact.getFixtureA().getUserData() == "left" || contact.getFixtureA().getUserData() == "right")){
+                    BodyDataObject dataObject = (BodyDataObject) contact.getFixtureB().getBody().getUserData();
+                    contact.getFixtureB().getBody().setUserData(new BodyDataObject(dataObject.object, dataObject.type,true));
                 }
             }
 
@@ -116,28 +112,24 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
             }
             @Override
             public void preSolve(Contact contact, Manifold oldManifold) {
-                if(contact.getFixtureA().getBody().getUserData() == "bullet" && contact.getFixtureB().getUserData() == "player"){
+                if(contact.getFixtureA().getUserData() == "bullet" && contact.getFixtureB().getUserData() == "player"){
                     contact.setEnabled(false);
                 }else{
                     contact.setEnabled(true);
                 }
 
-                if(contact.getFixtureB().getBody().getUserData() == "big" && contact.getFixtureA().getBody().getUserData() == "top" && contact.getFixtureB().getBody().getLinearVelocity().y < 0){
+                if((contact.getFixtureB().getUserData() == "big" || contact.getFixtureB().getUserData() == "medium" || contact.getFixtureB().getUserData() == "small") && contact.getFixtureA().getUserData() == "top" && contact.getFixtureB().getBody().getLinearVelocity().y < 0){
                     contact.setEnabled(false);
                 }
 
-                if(contact.getFixtureB().getBody().getUserData() == "big" && contact.getFixtureA().getBody().getUserData() == "bottom" && contact.getFixtureB().getBody().getLinearVelocity().y > 0){
+                if((contact.getFixtureB().getUserData() == "big" || contact.getFixtureB().getUserData() == "medium" || contact.getFixtureB().getUserData() == "small") && contact.getFixtureA().getUserData() == "bottom" && contact.getFixtureB().getBody().getLinearVelocity().y > 0){
                     contact.setEnabled(false);
                 }
-                if(contact.getFixtureB().getBody().getUserData() == "big" && contact.getFixtureA().getBody().getUserData() == "right" && contact.getFixtureB().getBody().getLinearVelocity().x > 0){
-                    contact.setEnabled(false);
-                }
-
-                if(contact.getFixtureB().getBody().getUserData() == "big" && contact.getFixtureA().getBody().getUserData() == "left" && contact.getFixtureB().getBody().getLinearVelocity().x < 0){
+                if((contact.getFixtureB().getUserData() == "big" || contact.getFixtureB().getUserData() == "medium" || contact.getFixtureB().getUserData() == "small") && contact.getFixtureA().getUserData() == "right" && contact.getFixtureB().getBody().getLinearVelocity().x > 0){
                     contact.setEnabled(false);
                 }
 
-                if((contact.getFixtureB().getBody().getUserData() == "big" || contact.getFixtureB().getBody().getUserData() == "medium") && (contact.getFixtureA().getBody().getUserData() == "big" || contact.getFixtureA().getBody().getUserData() == "medium")){
+                if((contact.getFixtureB().getUserData() == "big" || contact.getFixtureB().getUserData() == "medium" || contact.getFixtureB().getUserData() == "small") && contact.getFixtureA().getUserData() == "left" && contact.getFixtureB().getBody().getLinearVelocity().x < 0){
                     contact.setEnabled(false);
                 }
             }
@@ -174,7 +166,7 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
         }
 
 
-        //debugRenderer.render(world, camera.combined);
+        debugRenderer.render(world, camera.combined);
     }
 
     @Override

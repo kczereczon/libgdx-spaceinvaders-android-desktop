@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
 import com.krzysztofczereczon.spaceinvaders.GameInfo;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class Player extends Sprite {
         bodyDef.position.set(getX() / GameInfo.PPM, getY() / GameInfo.PPM);
 
         body = world.createBody(bodyDef);
-        body.setUserData("player");
+        body.setUserData(new BodyDataObject(this, "player", false));
 
         CircleShape shape = new CircleShape();
         shape.setRadius(getHeight() / 2 / GameInfo.PPM);
@@ -58,7 +59,7 @@ public class Player extends Sprite {
     }
 
 
-    public void update(SpriteBatch batch, List<Bullet> bullets){
+    public void update(SpriteBatch batch, Array<Bullet> bullets){
         batch.draw(this,body.getPosition().x  - getWidth()/2 / GameInfo.PPM, body.getPosition().y  - getHeight() / 2 / GameInfo.PPM, getWidth() / 2 / GameInfo.PPM, getHeight()/2 / GameInfo.PPM, getWidth() / GameInfo.PPM, getHeight() / GameInfo.PPM,1,1,body.getAngle());
 
         if(reload >= 0.1f){
