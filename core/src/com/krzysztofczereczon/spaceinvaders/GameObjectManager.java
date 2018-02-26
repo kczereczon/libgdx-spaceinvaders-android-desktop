@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.krzysztofczereczon.spaceinvaders.objects.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class GameObjectManager {
@@ -24,13 +25,13 @@ public class GameObjectManager {
     //Objects
     public Player player;
 
-    public List<AsteroidBig> asteroidsBig;
-    public List<AsteroidSmall> asteroidsSmall;
-    public List<AsteroidMedium> asteroidsMedium;
+    public Array<AsteroidBig> asteroidsBig;
+    public Array<AsteroidSmall> asteroidsSmall;
+    public Array<AsteroidMedium> asteroidsMedium;
 
     public com.badlogic.gdx.utils.Array<Body> bodies;
 
-    public List<Bullet> bullets;
+    public Array<Bullet> bullets;
 
     private GameManager gameManager;
 
@@ -44,14 +45,14 @@ public class GameObjectManager {
         this.world = world;
         player = new Player(world);
 
-        asteroidsSmall = new ArrayList<AsteroidSmall>();
-        asteroidsMedium = new ArrayList<AsteroidMedium>();
-        asteroidsBig = new ArrayList<AsteroidBig>();
+        asteroidsSmall = new Array<AsteroidSmall>();
+        asteroidsMedium = new Array<AsteroidMedium>();
+        asteroidsBig = new Array<AsteroidBig>();
         bodies = new com.badlogic.gdx.utils.Array<Body>();
         gameBorder = new GameBorder(world);
 
         asteroidsBig.add(new AsteroidBig(up,player.body.getTransform(),world));
-        bullets = new ArrayList<Bullet>();
+        bullets = new Array<Bullet>();
 
     }
 
@@ -66,12 +67,12 @@ public class GameObjectManager {
         //incresing delay
         asteroidDelay += Gdx.graphics.getDeltaTime();
 
-        if(gameManager != null){
-            if(currentLevel != gameManager.gameLevel){
+        if(gameManager != null) {
+            if (currentLevel != gameManager.gameLevel) {
                 int i = gameManager.gameLevel;
-                if(asteroidDelay >= 1) {
-                    if (asteroidsBig.size() <= i) {
-                        addAsteroids();
+                if (asteroidDelay >= 1) {
+                    if (asteroidsBig.size <= i) {
+                        addBigAsteroid();
                     } else {
                         currentLevel = gameManager.gameLevel;
                     }
@@ -80,30 +81,60 @@ public class GameObjectManager {
         }
     }
 
-    public void addMediumAsteroid(Transform biggerAsteroidTransform, int dir){
-        asteroidsMedium.add(new AsteroidMedium(dir, new Vector2(biggerAsteroidTransform.getPosition().x, biggerAsteroidTransform.getPosition().y + 64/GameInfo.PPM), player.body.getTransform(), world));
+    public void addMediumAsteroid(Transform biggerAsteroidTransform){
+        asteroidsMedium.add(new AsteroidMedium(new Vector2(biggerAsteroidTransform.getPosition().x, biggerAsteroidTransform.getPosition().y), player.body.getTransform(), world));
+    }
+
+    public void addSmallAsteroid(Transform biggerAsteroidTransform){
+        asteroidsSmall.add(new AsteroidSmall(new Vector2(biggerAsteroidTransform.getPosition().x, biggerAsteroidTransform.getPosition().y), player.body.getTransform(), world));
+    }
+
+
+    public void addBigAsteroid(){
+        switch ((int) Math.floor((Math.random() * 4))) {
+            case 0:
+                asteroidsBig.add(new AsteroidBig( left, player.body.getTransform(), world));
+                asteroidDelay = 0;
+                break;
+            case 1:
+                asteroidsBig.add(new AsteroidBig(right, player.body.getTransform(), world));
+                asteroidDelay = 0;
+                break;
+            case 2:
+                asteroidsBig.add(new AsteroidBig( up, player.body.getTransform(), world));
+                asteroidDelay = 0;
+                break;
+            case 3:
+                asteroidsBig.add(new AsteroidBig( down, player.body.getTransform(), world));
+                asteroidDelay = 0;
+                break;
+        }
     }
 
     public void destroyBodies(){
-        if(bodies.size > 0) {
-            for (Body body : bodies
-                    ) {
-                if (!world.isLocked()) {
-                    if(body.getUserData() == "big"){
-                        addMediumAsteroid(body.getTransform(), 1);
-                        addMediumAsteroid(body.getTransform(), -1);
-                    }
+        Array<Body> bodies = new Array<Body>();
+        world.getBodies(bodies);
 
-                    Array<JointEdge> joints = body.getJointList();
-                    for (JointEdge joint: joints
-                         ) {
-                        world.destroyJoint(joint.joint);
-                    }
+        for (Body body: bodies
+             ) {
+            BodyDataObject data = (BodyDataObject) body.getUserData();
 
-
-                    world.destroyBody(body);
-                    bodies.removeValue(body,false);
+            if(data!=null &&  data.isFlaggedForDelete){
+                if(data.type == "big"){
+                    addMediumAsteroid(body.getTransform());
+                    asteroidsBig.removeValue((AsteroidBig) data.object, true);
                 }
+                if(data.type == "medium"){
+                    addSmallAsteroid(body.getTransform());
+                    asteroidsMedium.removeValue((AsteroidMedium) data.object, true);
+                }
+                if(data.type == "small"){
+                    asteroidsSmall.removeValue((AsteroidSmall) data.object, true);
+                }
+                if(data.type == "bullet"){
+                    bullets.removeValue((Bullet) data.object, true);
+                }
+                world.destroyBody(body);
             }
         }
     }
@@ -130,26 +161,5 @@ public class GameObjectManager {
             bullet.update(batch);
         }
 
-    }
-
-    public void addAsteroids(){
-        switch ((int) Math.floor((Math.random() * 4))) {
-            case 0:
-                asteroidsBig.add(new AsteroidBig( left, player.body.getTransform(), world));
-                asteroidDelay = 0;
-                break;
-            case 1:
-                asteroidsBig.add(new AsteroidBig(right, player.body.getTransform(), world));
-                asteroidDelay = 0;
-                break;
-            case 2:
-                asteroidsBig.add(new AsteroidBig( up, player.body.getTransform(), world));
-                asteroidDelay = 0;
-                break;
-            case 3:
-                asteroidsBig.add(new AsteroidBig( down, player.body.getTransform(), world));
-                asteroidDelay = 0;
-                break;
-        }
     }
 }

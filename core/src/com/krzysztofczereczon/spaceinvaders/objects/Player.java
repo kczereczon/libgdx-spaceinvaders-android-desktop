@@ -27,14 +27,14 @@ public class Player extends Sprite {
         createBody();
     }
 
-    public void move(Vector3 vector){
+    public void move(Vector2 vector){
         float angle = (float)Math.atan2(vector.x, vector.y);
         body.setTransform(body.getPosition().x, body.getPosition().y, (float)(-angle * 180/Math.PI));
 
-        float joyX = -(body.getPosition().x - vector.x);
-        float joyY = -(body.getPosition().y - vector.y);
+        float joyX = vector.x;
+        float joyY = vector.y;
 
-        body.applyForce(new Vector2(((body.getLinearVelocity().x >= 0 && joyX <= 0) || (body.getLinearVelocity().x <= 0 && joyX >= 0)) ? 5 * joyX : joyX, ((body.getLinearVelocity().y >= 0 && joyY <= 0) || (body.getLinearVelocity().y <= 0 && joyY >= 0)) ? 5 * joyY : joyY), body.getPosition(), true);
+        body.applyForce(new Vector2(((body.getLinearVelocity().x >= 0 && joyX <= 0) || (body.getLinearVelocity().x <= 0 && joyX >= 0)) ? 10 * joyX : 3 * joyX, ((body.getLinearVelocity().y >= 0 && joyY <= 0) || (body.getLinearVelocity().y <= 0 && joyY >= 0)) ? 10 * joyY : 3 * joyY), body.getPosition(), true);
     }
 
 
@@ -62,7 +62,7 @@ public class Player extends Sprite {
     public void update(SpriteBatch batch, Array<Bullet> bullets){
         batch.draw(this,body.getPosition().x  - getWidth()/2 / GameInfo.PPM, body.getPosition().y  - getHeight() / 2 / GameInfo.PPM, getWidth() / 2 / GameInfo.PPM, getHeight()/2 / GameInfo.PPM, getWidth() / GameInfo.PPM, getHeight() / GameInfo.PPM,1,1,body.getAngle());
 
-        if(reload >= 0.1f){
+        if(reload >= 0.5f){
             bullets.add(new Bullet(world, body.getPosition(), body.getAngle()));
             reload = 0;
         }else{

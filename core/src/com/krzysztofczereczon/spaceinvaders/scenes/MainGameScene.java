@@ -12,6 +12,7 @@ import com.krzysztofczereczon.spaceinvaders.Game;
 import com.krzysztofczereczon.spaceinvaders.GameInfo;
 import com.krzysztofczereczon.spaceinvaders.GameManager;
 import com.krzysztofczereczon.spaceinvaders.GameObjectManager;
+import com.krzysztofczereczon.spaceinvaders.analog.ScreenJoystick;
 import com.krzysztofczereczon.spaceinvaders.objects.AsteroidBig;
 import com.krzysztofczereczon.spaceinvaders.objects.AsteroidMedium;
 import com.krzysztofczereczon.spaceinvaders.objects.BodyDataObject;
@@ -24,6 +25,7 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
 
     private GameObjectManager gameObjectManager;
     private GameManager gameManager;
+    private ScreenJoystick screenJoystick;
 
     private float startMouseX, startMouseY, mouseX, mouseY;
 
@@ -40,6 +42,7 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
         gameObjectManager = new GameObjectManager(world);
         gameManager = new GameManager(gameObjectManager);
         gameObjectManager.setGameManager(gameManager);
+        screenJoystick = new ScreenJoystick();
 
         Gdx.input.setInputProcessor(new InputProcessor() {
             @Override
@@ -59,8 +62,8 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
 
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                mouseX = screenX;
-                mouseY = screenY;
+                startMouseX = screenX;
+                startMouseY = screenY;
                 System.out.println(screenX);
                 return false;
             }
@@ -158,15 +161,16 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
         gameManager.update();
         game.getBatch().setProjectionMatrix(camera.combined);
         game.getBatch().begin();
+        screenJoystick.update(camera.unproject(new Vector3(startMouseX,startMouseY,0)), camera.unproject(new Vector3(Gdx.input.getX(),Gdx.input.getY(),0)), game.getBatch());
         gameObjectManager.update(game.getBatch());
         game.getBatch().end();
 
         if(Gdx.input.isTouched(0)){
-            gameObjectManager.player.move(camera.unproject(new Vector3(mouseX,mouseY,0)));
+            gameObjectManager.player.move(screenJoystick.getAxis());
         }
 
 
-        debugRenderer.render(world, camera.combined);
+        //debugRenderer.render(world, camera.combined);
     }
 
     @Override

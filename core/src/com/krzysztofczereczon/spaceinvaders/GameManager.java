@@ -11,10 +11,11 @@ public class GameManager {
     }
 
     public void update(){
-        if(gameObjectManager.asteroidsBig.size() == 0 && gameObjectManager.asteroidsSmall.size() == 0 && gameObjectManager.asteroidsMedium.size() == 0){
+        if(gameObjectManager.asteroidsBig.size == 0 && gameObjectManager.asteroidsSmall.size == 0 && gameObjectManager.asteroidsMedium.size == 0){
             gameLevel++;
             System.out.println(gameLevel);
         }
+
     }
 
 }
