@@ -13,7 +13,7 @@ public class Bullet extends Sprite {
     private World world;
 
     Bullet(World world, Vector2 position, Vector2 velocity, float angle){
-        super(new Texture("bullet.png"));
+        super(new Texture("laserRed.png"));
         this.world = world;
         createBody();
         body.setTransform(position.x, position.y, angle);

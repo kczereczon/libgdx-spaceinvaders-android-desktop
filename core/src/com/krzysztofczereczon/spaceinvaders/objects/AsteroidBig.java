@@ -12,7 +12,7 @@ public class AsteroidBig extends Sprite {
     private Body body;
 
     public AsteroidBig( Vector2 respawnPosition, Transform playerPos, World world) {
-        super(new Texture("asteroidbig.png"));
+        super(new Texture("meteorBig.png"));
         createBody(world);
 
         body.setTransform(respawnPosition.x, respawnPosition.y,30);

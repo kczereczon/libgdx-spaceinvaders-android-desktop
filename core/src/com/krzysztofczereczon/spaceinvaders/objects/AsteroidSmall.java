@@ -12,7 +12,7 @@ public class AsteroidSmall extends Sprite{
     private Body body;
 
     public AsteroidSmall(Vector2 respawnPosition, Transform playerPos, World world) {
-        super(new Texture("asteroidsmall.png"));
+        super(new Texture("meteorSmall.png"));
         createBody(world);
         body.setTransform(respawnPosition.x, respawnPosition.y,0);
 

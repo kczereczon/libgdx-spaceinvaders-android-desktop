@@ -12,7 +12,7 @@ public class AsteroidMedium extends Sprite{
     private Body body;
 
     public AsteroidMedium( Vector2 respawnPosition, Transform playerPos, World world) {
-        super(new Texture("asteroidmedium.png"));
+        super(new Texture("meteorMedium.png"));
         createBody(world);
         body.setTransform(respawnPosition.x, respawnPosition.y,0);
 

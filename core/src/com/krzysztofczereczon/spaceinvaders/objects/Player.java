@@ -32,7 +32,7 @@ public class Player extends Sprite {
 
         float impulseX = ((body.getLinearVelocity().x <= maxSpeed && vector.x > 0) || (body.getLinearVelocity().x >= -maxSpeed && vector.x < 0)) ? vector.x * speed : 0;
         float impulseY = ((body.getLinearVelocity().y <= maxSpeed && vector.y > 0) || (body.getLinearVelocity().y >= -maxSpeed && vector.y < 0)) ? vector.y * speed : 0;
-        
+
         body.applyForceToCenter(new Vector2(impulseX, impulseY), true);
     }
 

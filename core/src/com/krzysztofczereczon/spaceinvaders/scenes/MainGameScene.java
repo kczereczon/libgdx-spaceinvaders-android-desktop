@@ -147,7 +147,7 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0,0, 0, 1);
+        Gdx.gl.glClearColor(0.34f,0.24f, 0.42f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         world.step(Gdx.graphics.getDeltaTime(), 6, 6);
