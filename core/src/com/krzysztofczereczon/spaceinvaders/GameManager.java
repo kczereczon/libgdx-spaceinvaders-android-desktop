@@ -3,7 +3,6 @@ package com.krzysztofczereczon.spaceinvaders;
 public class GameManager {
 
     public int gameLevel = 1;
-    public int lastLevel = -1;
     private GameObjectManager gameObjectManager;
 
     public GameManager(GameObjectManager gameObjectManager){

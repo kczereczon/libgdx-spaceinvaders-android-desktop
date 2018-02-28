@@ -9,16 +9,16 @@ import com.krzysztofczereczon.spaceinvaders.GameInfo;
 
 public class Bullet extends Sprite {
 
-    public Body body;
+    private Body body;
     private World world;
 
-    Bullet(World world, Vector2 position, float angle){
+    Bullet(World world, Vector2 position, Vector2 velocity, float angle){
         super(new Texture("bullet.png"));
         this.world = world;
         createBody();
         body.setTransform(position.x, position.y, angle);
 
-        Vector2 impulse = new Vector2(500 * -(float)Math.sin(body.getAngle() * Math.PI/180) / GameInfo.PPM, 500 * (float)Math.cos(body.getAngle() * Math.PI/180) / GameInfo.PPM);
+        Vector2 impulse = new Vector2(500 * -(float)Math.sin(body.getAngle() * Math.PI/180) / GameInfo.PPM + velocity.x, 500 * (float)Math.cos(body.getAngle() * Math.PI/180) / GameInfo.PPM + velocity.y);
         body.applyLinearImpulse(impulse, body.getWorldCenter(), true);
 
     }

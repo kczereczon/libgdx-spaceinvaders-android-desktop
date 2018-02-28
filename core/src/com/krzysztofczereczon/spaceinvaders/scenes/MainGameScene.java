@@ -13,8 +13,6 @@ import com.krzysztofczereczon.spaceinvaders.GameInfo;
 import com.krzysztofczereczon.spaceinvaders.GameManager;
 import com.krzysztofczereczon.spaceinvaders.GameObjectManager;
 import com.krzysztofczereczon.spaceinvaders.analog.ScreenJoystick;
-import com.krzysztofczereczon.spaceinvaders.objects.AsteroidBig;
-import com.krzysztofczereczon.spaceinvaders.objects.AsteroidMedium;
 import com.krzysztofczereczon.spaceinvaders.objects.BodyDataObject;
 
 public class MainGameScene implements com.badlogic.gdx.Screen {
@@ -27,7 +25,7 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
     private GameManager gameManager;
     private ScreenJoystick screenJoystick;
 
-    private float startMouseX, startMouseY, mouseX, mouseY;
+    private float startMouseX, startMouseY;
 
     private Box2DDebugRenderer debugRenderer;
 
@@ -75,8 +73,6 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
 
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
-                mouseX = screenX;
-                mouseY = screenY;
                 return false;
             }
 
@@ -170,7 +166,7 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
         }
 
 
-        //debugRenderer.render(world, camera.combined);
+        debugRenderer.render(world, camera.combined);
     }
 
     @Override

@@ -9,7 +9,7 @@ import com.krzysztofczereczon.spaceinvaders.GameInfo;
 
 public class AsteroidBig extends Sprite {
 
-    public Body body;
+    private Body body;
 
     public AsteroidBig( Vector2 respawnPosition, Transform playerPos, World world) {
         super(new Texture("asteroidbig.png"));

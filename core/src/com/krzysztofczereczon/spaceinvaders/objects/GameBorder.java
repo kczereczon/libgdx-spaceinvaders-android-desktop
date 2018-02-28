@@ -1,7 +1,6 @@
 package com.krzysztofczereczon.spaceinvaders.objects;
 
 import com.badlogic.gdx.physics.box2d.*;
-import com.krzysztofczereczon.spaceinvaders.Game;
 import com.krzysztofczereczon.spaceinvaders.GameInfo;
 
 public class GameBorder {
@@ -20,7 +19,6 @@ public class GameBorder {
 
         bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set(0, (float)GameInfo.HEIGHT / 2 / GameInfo.PPM);
-        System.out.println(GameInfo.HEIGHT + 64 / 2 / GameInfo.PPM );
 
         body = world.createBody(bodyDef);
         body.setUserData(new BodyDataObject(this,"border",  false));
