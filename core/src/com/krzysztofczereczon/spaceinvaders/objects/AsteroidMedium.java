@@ -20,7 +20,7 @@ public class AsteroidMedium extends Sprite{
         float velocityY =  playerPos.getPosition().y - respawnPosition.y;
 
         body.setLinearVelocity(new Vector2(1.25f * velocityX / Math.abs(velocityX), 1.25f * velocityY / Math.abs(velocityY)));
-        body.setAngularVelocity(40);
+        //body.setAngularVelocity(40);
     }
 
     private void createBody(World world) {

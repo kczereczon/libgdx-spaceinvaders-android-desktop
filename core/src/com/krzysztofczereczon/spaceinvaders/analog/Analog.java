@@ -1,5 +1,6 @@
 package com.krzysztofczereczon.spaceinvaders.analog;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,10 +15,12 @@ public class Analog extends Sprite {
     }
 
     public void update(Vector3 updatedPos, Vector3 startPos, float radius, SpriteBatch batch){
-        Vector2 positionOnCircle = vectorToPointOnCircle(new Vector3(startPos.x , startPos.y ,0), updatedPos, radius);
-        float x = (Math.pow(updatedPos.x - startPos.x, 2) + Math.pow(updatedPos.y - startPos.y, 2) <= Math.pow(radius, 2)) ? updatedPos.x - getWidth()/2/GameInfo.PPM: positionOnCircle.x - getWidth()/2/GameInfo.PPM;
-        float y = (Math.pow(updatedPos.x - startPos.x, 2) + Math.pow(updatedPos.y - startPos.y, 2) <= Math.pow(radius, 2)) ? updatedPos.y - getHeight()/2/GameInfo.PPM: positionOnCircle.y - getHeight()/2/GameInfo.PPM;
-        setPosition(x+getWidth()/2/GameInfo.PPM, y+ getHeight()/2/ GameInfo.PPM);
+        if(Gdx.input.isTouched(0)) {
+            Vector2 positionOnCircle = vectorToPointOnCircle(new Vector3(startPos.x, startPos.y, 0), updatedPos, radius);
+            float x = (Math.pow(updatedPos.x - startPos.x, 2) + Math.pow(updatedPos.y - startPos.y, 2) <= Math.pow(radius, 2)) ? updatedPos.x - getWidth() / 2 / GameInfo.PPM : positionOnCircle.x - getWidth() / 2 / GameInfo.PPM;
+            float y = (Math.pow(updatedPos.x - startPos.x, 2) + Math.pow(updatedPos.y - startPos.y, 2) <= Math.pow(radius, 2)) ? updatedPos.y - getHeight() / 2 / GameInfo.PPM : positionOnCircle.y - getHeight() / 2 / GameInfo.PPM;
+            setPosition(x + getWidth() / 2 / GameInfo.PPM, y + getHeight() / 2 / GameInfo.PPM);
+        }
 
         batch.draw(this, getX()-getWidth()/2/GameInfo.PPM, getY()-getHeight()/2/GameInfo.PPM, getWidth() / GameInfo.PPM, getHeight() / GameInfo.PPM);
     }

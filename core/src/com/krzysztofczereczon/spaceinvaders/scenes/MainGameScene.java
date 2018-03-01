@@ -62,6 +62,7 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 startMouseX = screenX;
                 startMouseY = screenY;
+                gameManager.gameHaveSarted = true;
                 System.out.println(screenX);
                 return false;
             }
@@ -89,14 +90,32 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
         world.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
-                if(contact.getFixtureA().getUserData() == "bullet" && (contact.getFixtureB().getUserData() == "big" || contact.getFixtureB().getUserData() == "medium" || contact.getFixtureB().getUserData() == "small")){
-                    BodyDataObject dataObject = (BodyDataObject) contact.getFixtureB().getBody().getUserData();
-                    contact.getFixtureB().getBody().setUserData(new BodyDataObject(dataObject.object, dataObject.type,true));
-                }
+                //destroing big asteroids
+                if((contact.getFixtureB().getUserData() == "bullet" && contact.getFixtureA().getUserData() == "big") || (contact.getFixtureA().getUserData() == "bullet" && contact.getFixtureB().getUserData() == "big")){
+                    BodyDataObject objectB = (BodyDataObject) contact.getFixtureB().getBody().getUserData();
+                    contact.getFixtureB().getBody().setUserData(new BodyDataObject(objectB.object, objectB.type,true));
 
-                if(contact.getFixtureA().getUserData() == "bullet" && (contact.getFixtureB().getUserData() == "big" || contact.getFixtureB().getUserData() == "medium" || contact.getFixtureB().getUserData() == "small")) {
-                    BodyDataObject dataObject = (BodyDataObject) contact.getFixtureA().getBody().getUserData();
-                    contact.getFixtureA().getBody().setUserData(new BodyDataObject(dataObject.object, dataObject.type, true));
+                    BodyDataObject objectA = (BodyDataObject) contact.getFixtureA().getBody().getUserData();
+                    contact.getFixtureA().getBody().setUserData(new BodyDataObject(objectA.object, objectA.type,true));
+
+                }
+                //destroing medium
+                if((contact.getFixtureB().getUserData() == "bullet" && contact.getFixtureA().getUserData() == "medium") || (contact.getFixtureA().getUserData() == "bullet" && contact.getFixtureB().getUserData() == "medium")){
+                    BodyDataObject objectB = (BodyDataObject) contact.getFixtureB().getBody().getUserData();
+                    contact.getFixtureB().getBody().setUserData(new BodyDataObject(objectB.object, objectB.type,true));
+
+                    BodyDataObject objectA = (BodyDataObject) contact.getFixtureA().getBody().getUserData();
+                    contact.getFixtureA().getBody().setUserData(new BodyDataObject(objectA.object, objectA.type,true));
+
+                }
+                //destroing small
+                if((contact.getFixtureB().getUserData() == "bullet" && contact.getFixtureA().getUserData() == "small") || (contact.getFixtureA().getUserData() == "bullet" && contact.getFixtureB().getUserData() == "small")){
+                    BodyDataObject objectB = (BodyDataObject) contact.getFixtureB().getBody().getUserData();
+                    contact.getFixtureB().getBody().setUserData(new BodyDataObject(objectB.object, objectB.type,true));
+
+                    BodyDataObject objectA = (BodyDataObject) contact.getFixtureA().getBody().getUserData();
+                    contact.getFixtureA().getBody().setUserData(new BodyDataObject(objectA.object, objectA.type,true));
+
                 }
 
                 if(contact.getFixtureB().getUserData() == "bullet" && (contact.getFixtureA().getUserData() == "top" || contact.getFixtureA().getUserData() == "bottom" || contact.getFixtureA().getUserData() == "left" || contact.getFixtureA().getUserData() == "right")){
@@ -111,10 +130,8 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
             }
             @Override
             public void preSolve(Contact contact, Manifold oldManifold) {
-                if(contact.getFixtureA().getUserData() == "bullet" && contact.getFixtureB().getUserData() == "player"){
+                if(contact.getFixtureB().getUserData() == "bullet" && contact.getFixtureA().getUserData() == "player"){
                     contact.setEnabled(false);
-                }else{
-                    contact.setEnabled(true);
                 }
 
                 if((contact.getFixtureB().getUserData() == "big" || contact.getFixtureB().getUserData() == "medium" || contact.getFixtureB().getUserData() == "small") && contact.getFixtureA().getUserData() == "top" && contact.getFixtureB().getBody().getLinearVelocity().y < 0){

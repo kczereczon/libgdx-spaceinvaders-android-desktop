@@ -20,7 +20,7 @@ public class AsteroidSmall extends Sprite{
         float velocityY =  playerPos.getPosition().y - respawnPosition.y;
 
         body.setLinearVelocity(new Vector2(1.5f * velocityX / Math.abs(velocityX), 1.5f * velocityY / Math.abs(velocityY)));
-        body.setAngularVelocity(60);
+        //body.setAngularVelocity(60);
     }
 
     private void createBody(World world) {

@@ -32,8 +32,8 @@ public class Bullet extends Sprite {
         body = world.createBody(bodyDef);
         body.setUserData(new BodyDataObject(this, "bullet", false));
 
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(getWidth()/2/ GameInfo.PPM, getHeight() / 2 / GameInfo.PPM);
+        CircleShape shape = new CircleShape();
+        shape.setRadius(getWidth()/ GameInfo.PPM);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;

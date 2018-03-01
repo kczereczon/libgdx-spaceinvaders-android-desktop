@@ -21,7 +21,7 @@ public class AsteroidBig extends Sprite {
         float velocityY = -1 * playerPos.getPosition().y - respawnPosition.y;
 
         body.applyLinearImpulse(new Vector2(2*velocityX / Math.abs(velocityX), 2*velocityY / Math.abs(velocityY)), body.getWorldCenter(), true);
-        body.setAngularVelocity(20);
+        //body.setAngularVelocity(20);
     }
 
     private void createBody(World world) {

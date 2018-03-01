@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.krzysztofczereczon.spaceinvaders.GameInfo;
+import com.krzysztofczereczon.spaceinvaders.GameManager;
 
 
 public class Player extends Sprite {
@@ -15,14 +16,15 @@ public class Player extends Sprite {
     private World world;
     public Body body;
     private float speed = 10;
-    private float maxSpeed = 3;
+    private float maxSpeed = 2;
+    private GameManager gameManager;
 
     private float reload = 0;
 
-    public Player(World world){
+    public Player(World world, GameManager gameManager){
         super(new Texture("player.png"));
         this.world = world;
-
+        this.gameManager = gameManager;
         createBody();
     }
 
@@ -70,12 +72,14 @@ public class Player extends Sprite {
     public void update(SpriteBatch batch, Array<Bullet> bullets){
         batch.draw(this,body.getPosition().x  - getWidth()/2 / GameInfo.PPM, body.getPosition().y  - getHeight() / 2 / GameInfo.PPM, getWidth() / 2 / GameInfo.PPM, getHeight()/2 / GameInfo.PPM, getWidth() / GameInfo.PPM, getHeight() / GameInfo.PPM,1,1,body.getAngle());
         drag();
-        if(reload >= 0.25f){
-            bullets.add(new Bullet(world, body.getPosition(), body.getLinearVelocity(), body.getAngle()));
-            reload = 0;
-        }else{
-            reload += Gdx.graphics.getDeltaTime();
-        }
 
+        if(gameManager.gameHaveSarted == true) {
+            if (reload >= 0.25f) {
+                bullets.add(new Bullet(world, body.getPosition(), body.getLinearVelocity(), body.getAngle()));
+                reload = 0;
+            } else {
+                reload += Gdx.graphics.getDeltaTime();
+            }
+        }
     }
 }

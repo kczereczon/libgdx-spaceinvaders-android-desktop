@@ -14,16 +14,14 @@ public class GameObjectManager {
 
     private World world;
 
-    private float asteroidDelay;
-    private int currentLevel = 0;
     private GameBorder border;
 
     //Objects
     public Player player;
 
-    public Array<AsteroidBig> asteroidsBig;
-    public Array<AsteroidSmall> asteroidsSmall;
-    public Array<AsteroidMedium> asteroidsMedium;
+    private Array<AsteroidBig> asteroidsBig;
+    private Array<AsteroidSmall> asteroidsSmall;
+    private Array<AsteroidMedium> asteroidsMedium;
     private Array<Bullet> bullets;
 
     private GameManager gameManager;
@@ -36,70 +34,47 @@ public class GameObjectManager {
 
     public GameObjectManager(World world){
         this.world = world;
-        player = new Player(world);
+
 
         asteroidsSmall = new Array<AsteroidSmall>();
         asteroidsMedium = new Array<AsteroidMedium>();
         asteroidsBig = new Array<AsteroidBig>();
-
-
-        asteroidsBig.add(new AsteroidBig(up,player.body.getTransform(),world));
         bullets = new Array<Bullet>();
-
         border = new GameBorder(world);
     }
 
     public void setGameManager(GameManager gameManager){
         this.gameManager = gameManager;
+        player = new Player(world, gameManager);
     }
 
     public void update(SpriteBatch batch){
         player.update(batch, bullets);
         draw(batch);
-
-        //incresing delay
-        asteroidDelay += Gdx.graphics.getDeltaTime();
-
-        if(gameManager != null) {
-            if (currentLevel != gameManager.gameLevel) {
-                int i = gameManager.gameLevel;
-                if (asteroidDelay >= 1) {
-                    if (asteroidsBig.size <= i) {
-                        addBigAsteroid();
-                    } else {
-                        currentLevel = gameManager.gameLevel;
-                    }
-                }
-            }
-        }
     }
 
-    private void addMediumAsteroid(Transform biggerAsteroidTransform){
+    public void addMediumAsteroid(Transform biggerAsteroidTransform){
         asteroidsMedium.add(new AsteroidMedium(new Vector2(biggerAsteroidTransform.getPosition().x, biggerAsteroidTransform.getPosition().y), player.body.getTransform(), world));
     }
 
-    private void addSmallAsteroid(Transform biggerAsteroidTransform){
+    public void addSmallAsteroid(Transform biggerAsteroidTransform){
         asteroidsSmall.add(new AsteroidSmall(new Vector2(biggerAsteroidTransform.getPosition().x, biggerAsteroidTransform.getPosition().y), player.body.getTransform(), world));
     }
 
 
-    private void addBigAsteroid(){
+    public void addBigAsteroid(){
         switch ((int) Math.floor((Math.random() * 4))) {
             case 0:
                 asteroidsBig.add(new AsteroidBig( left, player.body.getTransform(), world));
-                asteroidDelay = 0;
                 break;
             case 1:
                 asteroidsBig.add(new AsteroidBig(right, player.body.getTransform(), world));
-                asteroidDelay = 0;
                 break;
             case 2:
                 asteroidsBig.add(new AsteroidBig( up, player.body.getTransform(), world));
-                asteroidDelay = 0;
                 break;
             case 3:
                 asteroidsBig.add(new AsteroidBig( down, player.body.getTransform(), world));
-                asteroidDelay = 0;
                 break;
         }
     }
@@ -115,13 +90,16 @@ public class GameObjectManager {
             if(data!=null &&  data.isFlaggedForDelete){
                 if(data.type.equals("big")){
                     addMediumAsteroid(body.getTransform());
+                    gameManager.requiredToLevelUp--;
                     asteroidsBig.removeValue((AsteroidBig) data.object, true);
                 }
                 if(data.type.equals("medium")){
                     addSmallAsteroid(body.getTransform());
+                    gameManager.requiredToLevelUp--;
                     asteroidsMedium.removeValue((AsteroidMedium) data.object, true);
                 }
                 if(data.type.equals("small")){
+                    gameManager.requiredToLevelUp--;
                     asteroidsSmall.removeValue((AsteroidSmall) data.object, true);
                 }
                 if(data.type.equals("bullet")){
@@ -131,6 +109,7 @@ public class GameObjectManager {
             }
         }
     }
+
 
     private void draw(SpriteBatch batch){
         //drawing
