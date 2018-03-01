@@ -20,6 +20,7 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
     private Game game;
     private Camera camera;
     private World world;
+    private GameGui gameGui;
 
     private GameObjectManager gameObjectManager;
     private GameManager gameManager;
@@ -41,7 +42,7 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
         gameManager = new GameManager(gameObjectManager);
         gameObjectManager.setGameManager(gameManager);
         screenJoystick = new ScreenJoystick();
-
+        gameGui = new GameGui(gameManager, camera);
         Gdx.input.setInputProcessor(new InputProcessor() {
             @Override
             public boolean keyDown(int keycode) {
@@ -177,7 +178,9 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
         screenJoystick.update(camera.unproject(new Vector3(startMouseX,startMouseY,0)), camera.unproject(new Vector3(Gdx.input.getX(),Gdx.input.getY(),0)), game.getBatch());
         gameObjectManager.update(game.getBatch());
         game.getBatch().end();
-
+        gameGui.act();
+        gameGui.draw();
+        gameGui.update();
         if(Gdx.input.isTouched(0)){
             gameObjectManager.player.move(screenJoystick.getAxis());
         }
