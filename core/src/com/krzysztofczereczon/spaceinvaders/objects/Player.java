@@ -35,14 +35,14 @@ public class Player extends Sprite {
         float impulseX = ((body.getLinearVelocity().x <= maxSpeed && vector.x > 0) || (body.getLinearVelocity().x >= -maxSpeed && vector.x < 0)) ? vector.x * speed : 0;
         float impulseY = ((body.getLinearVelocity().y <= maxSpeed && vector.y > 0) || (body.getLinearVelocity().y >= -maxSpeed && vector.y < 0)) ? vector.y * speed : 0;
 
-        body.applyForceToCenter(new Vector2(impulseX, impulseY), true);
+        body.setLinearVelocity(new Vector2(vector.x * 3, vector.y * 3));
     }
 
     private void drag(){
         Vector2 v = body.getLinearVelocity();
         float vSqrd = v.dst2(new Vector2(0,0));
 
-        float fMag = 0.5f * vSqrd;
+        float fMag = 1f * vSqrd;
         Vector2 fd = new Vector2(-v.nor().x  * fMag, -v.nor().y  * fMag);
         body.applyForceToCenter(fd, true);
     }

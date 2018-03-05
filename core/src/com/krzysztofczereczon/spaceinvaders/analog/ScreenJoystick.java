@@ -7,11 +7,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.krzysztofczereczon.spaceinvaders.GameInfo;
+import jdk.nashorn.internal.runtime.Debug;
 
 public class ScreenJoystick extends Sprite{
 
     private Analog analog;
-
 
     public ScreenJoystick(){
         super(new Texture("analogbackground.png"));
@@ -22,7 +22,6 @@ public class ScreenJoystick extends Sprite{
         if(Gdx.input.isTouched()) {
             setPosition(startPos.x, startPos.y);
             analog.update(updatedPos, startPos, getHeight() / 2 / GameInfo.PPM, batch);
-            System.out.println(getAxis());
             batch.draw(this, startPos.x - getWidth() / 2 / GameInfo.PPM, startPos.y - getHeight() / 2 / GameInfo.PPM, getWidth() / 2 / GameInfo.PPM, getHeight() / 2 / GameInfo.PPM, getWidth() / GameInfo.PPM, getHeight() / GameInfo.PPM, 1, 1, getRotation());
         }
     }

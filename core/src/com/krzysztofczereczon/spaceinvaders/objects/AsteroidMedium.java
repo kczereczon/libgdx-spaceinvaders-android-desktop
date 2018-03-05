@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.krzysztofczereczon.spaceinvaders.GameInfo;
 
@@ -11,16 +12,12 @@ public class AsteroidMedium extends Sprite{
 
     private Body body;
 
-    public AsteroidMedium( Vector2 respawnPosition, Transform playerPos, World world) {
+    public AsteroidMedium(Vector2 respawnPosition, Vector2 velcity, World world) {
         super(new Texture("meteorMedium.png"));
         createBody(world);
         body.setTransform(respawnPosition.x, respawnPosition.y,0);
 
-        float velocityX = playerPos.getPosition().x - respawnPosition.x;
-        float velocityY =  playerPos.getPosition().y - respawnPosition.y;
-
-        body.setLinearVelocity(new Vector2(1.25f * velocityX / Math.abs(velocityX), 1.25f * velocityY / Math.abs(velocityY)));
-        //body.setAngularVelocity(40);
+        body.setLinearVelocity(new Vector2(1.25f * velcity.x, 1.25f * velcity.y));
     }
 
     private void createBody(World world) {
@@ -37,6 +34,7 @@ public class AsteroidMedium extends Sprite{
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.restitution = 1f;
+        fixtureDef.density = 10f;
         fixtureDef.shape = shape;
 
         body.createFixture(fixtureDef).setUserData("medium");

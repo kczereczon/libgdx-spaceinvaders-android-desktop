@@ -1,16 +1,18 @@
 package com.krzysztofczereczon.spaceinvaders;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.krzysztofczereczon.spaceinvaders.scenes.MainGameScene;
+import com.krzysztofczereczon.spaceinvaders.scenes.Menu;
 
 public class Game extends com.badlogic.gdx.Game {
 	SpriteBatch batch;
-	
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+
 		setScreen(new MainGameScene(this));
 	}
 
@@ -27,4 +29,6 @@ public class Game extends com.badlogic.gdx.Game {
 	public SpriteBatch getBatch() {
 		return batch;
 	}
+
+
 }

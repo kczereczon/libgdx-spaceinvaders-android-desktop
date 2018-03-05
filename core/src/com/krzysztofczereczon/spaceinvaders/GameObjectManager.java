@@ -1,6 +1,5 @@
 package com.krzysztofczereczon.spaceinvaders;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -13,8 +12,6 @@ import com.krzysztofczereczon.spaceinvaders.objects.*;
 public class GameObjectManager {
 
     private World world;
-
-    private GameBorder border;
 
     //Objects
     public Player player;
@@ -40,7 +37,6 @@ public class GameObjectManager {
         asteroidsMedium = new Array<AsteroidMedium>();
         asteroidsBig = new Array<AsteroidBig>();
         bullets = new Array<Bullet>();
-        border = new GameBorder(world);
     }
 
     public void setGameManager(GameManager gameManager){
@@ -50,15 +46,16 @@ public class GameObjectManager {
 
     public void update(SpriteBatch batch){
         player.update(batch, bullets);
+        border();
         draw(batch);
     }
 
-    public void addMediumAsteroid(Transform biggerAsteroidTransform){
-        asteroidsMedium.add(new AsteroidMedium(new Vector2(biggerAsteroidTransform.getPosition().x, biggerAsteroidTransform.getPosition().y), player.body.getTransform(), world));
+    private void addMediumAsteroid(Transform biggerAsteroidTransform, Vector2 veocity){
+        asteroidsMedium.add(new AsteroidMedium(new Vector2(biggerAsteroidTransform.getPosition().x, biggerAsteroidTransform.getPosition().y), veocity, world));
     }
 
-    public void addSmallAsteroid(Transform biggerAsteroidTransform){
-        asteroidsSmall.add(new AsteroidSmall(new Vector2(biggerAsteroidTransform.getPosition().x, biggerAsteroidTransform.getPosition().y), player.body.getTransform(), world));
+    private void addSmallAsteroid(Transform biggerAsteroidTransform, Vector2 velocity){
+        asteroidsSmall.add(new AsteroidSmall(new Vector2(biggerAsteroidTransform.getPosition().x, biggerAsteroidTransform.getPosition().y), velocity, world));
     }
 
 
@@ -79,6 +76,36 @@ public class GameObjectManager {
         }
     }
 
+    private void border(){
+        Array<Body> bodies = new Array<Body>();
+        world.getBodies(bodies);
+
+        for(Body body: bodies){
+            BodyDataObject bodyDataObject = (BodyDataObject) body.getUserData();
+            if(!bodyDataObject.type.equals("bullet")){
+                if(body.getPosition().x < -7f && body.getLinearVelocity().x < 0){
+                    body.setTransform(7f, body.getPosition().y, body.getAngle());
+                }
+                if(body.getPosition().x > 7f && body.getLinearVelocity().x > 0){
+                    body.setTransform(-7f, body.getPosition().y, body.getAngle());
+                }
+                if(body.getPosition().y < -4f && body.getLinearVelocity().y < 0){
+                    body.setTransform(body.getPosition().x, 4f, body.getAngle());
+                }
+                if(body.getPosition().y > 4f && body.getLinearVelocity().y > 0){
+                    body.setTransform(body.getPosition().x, -4f, body.getAngle());
+                }
+            }else{
+                if(body.getPosition().x < -7f
+                        || body.getPosition().x >7f
+                        || body.getPosition().y < -4f
+                        || body.getPosition().y > 4f){
+                    body.setUserData(new BodyDataObject(bodyDataObject.object, "bullet", true));
+                }
+            }
+        }
+    }
+
     public void destroyBodies(){
         Array<Body> bodies = new Array<Body>();
         world.getBodies(bodies);
@@ -89,17 +116,20 @@ public class GameObjectManager {
 
             if(data!=null &&  data.isFlaggedForDelete){
                 if(data.type.equals("big")){
-                    addMediumAsteroid(body.getTransform());
+                    addMediumAsteroid(body.getTransform(), body.getLinearVelocity());
                     gameManager.requiredToLevelUp--;
+                    gameManager.score += 50;
                     asteroidsBig.removeValue((AsteroidBig) data.object, true);
                 }
                 if(data.type.equals("medium")){
-                    addSmallAsteroid(body.getTransform());
+                    addSmallAsteroid(body.getTransform(), body.getLinearVelocity());
                     gameManager.requiredToLevelUp--;
+                    gameManager.score += 75;
                     asteroidsMedium.removeValue((AsteroidMedium) data.object, true);
                 }
                 if(data.type.equals("small")){
                     gameManager.requiredToLevelUp--;
+                    gameManager.score += 100;
                     asteroidsSmall.removeValue((AsteroidSmall) data.object, true);
                 }
                 if(data.type.equals("bullet")){
@@ -133,9 +163,5 @@ public class GameObjectManager {
             bullet.update(batch);
         }
 
-    }
-
-    public void setBorder(GameBorder border) {
-        this.border = border;
     }
 }

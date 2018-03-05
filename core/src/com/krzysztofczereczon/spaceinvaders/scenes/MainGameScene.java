@@ -5,6 +5,8 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
@@ -18,13 +20,15 @@ import com.krzysztofczereczon.spaceinvaders.objects.BodyDataObject;
 public class MainGameScene implements com.badlogic.gdx.Screen {
 
     private Game game;
-    private Camera camera;
+
     private World world;
     private GameGui gameGui;
-
+    private Camera camera;
     private GameObjectManager gameObjectManager;
     private GameManager gameManager;
     private ScreenJoystick screenJoystick;
+
+    private Texture backgorund;
 
     private float startMouseX, startMouseY;
 
@@ -32,11 +36,11 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
 
     public MainGameScene(final Game game) {
         this.game = game;
-        camera = new OrthographicCamera(GameInfo.WIDTH / GameInfo.PPM, GameInfo.HEIGHT / GameInfo.PPM);
+        backgorund = new Texture("starBackground.png");
         world = new World(new Vector2(0, 0), true);
         world.step(1/60f, 6, 6);
         debugRenderer = new Box2DDebugRenderer();
-
+        camera = new OrthographicCamera(GameInfo.WIDTH / GameInfo.PPM, GameInfo.HEIGHT / GameInfo.PPM);
 
         gameObjectManager = new GameObjectManager(world);
         gameManager = new GameManager(gameObjectManager);
@@ -175,12 +179,14 @@ public class MainGameScene implements com.badlogic.gdx.Screen {
         gameManager.update();
         game.getBatch().setProjectionMatrix(camera.combined);
         game.getBatch().begin();
+        game.getBatch().draw(backgorund,-backgorund.getWidth() / GameInfo.PPM * 4f,-backgorund.getHeight() / GameInfo.PPM * 5, backgorund.getWidth() / GameInfo.PPM * 8, backgorund.getHeight() / GameInfo.PPM * 10);
         screenJoystick.update(camera.unproject(new Vector3(startMouseX,startMouseY,0)), camera.unproject(new Vector3(Gdx.input.getX(),Gdx.input.getY(),0)), game.getBatch());
         gameObjectManager.update(game.getBatch());
         game.getBatch().end();
         gameGui.act();
         gameGui.draw();
         gameGui.update();
+        camera.update();
         if(Gdx.input.isTouched(0)){
             gameObjectManager.player.move(screenJoystick.getAxis());
         }

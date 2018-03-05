@@ -4,15 +4,19 @@ import com.badlogic.gdx.Gdx;
 
 public class GameManager {
 
-    public int gameLevel = 1;
+    public int gameLevel = 0;
+
     public boolean gameHaveSarted = false;
     public int requiredToLevelUp = gameLevel * 3;
     private int neededAsteroids = gameLevel;
+    public int playerHp = 100;
+    public int score = 0;
 
     private float timer;
     private float gameSpeed = 1.25f;
+    public float requredTimeToRespawn;
 
-    private GameObjectManager gameObjectManager;
+    public GameObjectManager gameObjectManager;
 
     public GameManager(GameObjectManager gameObjectManager){
         this.gameObjectManager = gameObjectManager;
@@ -21,10 +25,11 @@ public class GameManager {
     public void update(){
         if(gameHaveSarted) {
             timer += Gdx.graphics.getDeltaTime();
-            if(timer >= gameSpeed && neededAsteroids != 0){
+            if(timer >= requredTimeToRespawn && neededAsteroids != 0){
                 gameObjectManager.addBigAsteroid();
                 neededAsteroids--;
                 timer = 0;
+                requredTimeToRespawn = gameSpeed;
             }
         }
 
@@ -32,6 +37,8 @@ public class GameManager {
             gameLevel ++;
             requiredToLevelUp = gameLevel * 3;
             neededAsteroids = gameLevel;
+            timer = 0;
+            requredTimeToRespawn = 5f;
         }
     }
 

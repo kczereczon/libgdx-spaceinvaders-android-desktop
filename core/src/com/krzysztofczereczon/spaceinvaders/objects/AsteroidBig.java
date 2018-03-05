@@ -38,12 +38,12 @@ public class AsteroidBig extends Sprite {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.restitution = 1f;
+        fixtureDef.density = 2f;
         fixtureDef.shape = shape;
 
         body.createFixture(fixtureDef).setUserData("big");
         shape.dispose();
     }
-
 
 
     public void update(SpriteBatch batch) {
